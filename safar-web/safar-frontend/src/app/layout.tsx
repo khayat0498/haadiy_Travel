@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { Header } from "@/components/safar/Header";
+import { BottomTabBar } from "@/components/safar/BottomTabBar";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -37,7 +39,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          <main className="flex-1 pb-20">{children}</main>
+          <BottomTabBar />
+        </Providers>
       </body>
     </html>
   );
