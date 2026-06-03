@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAFAR — MVP Roadmap (Web + Mobile · 1.5 oy)</title>
+<style>
+  :root {
+    --primary: #1e40af;
+    --primary-dark: #1e3a8a;
+    --gold: #d4a574;
+    --gold-light: #f5e6d3;
+    --teal: #0f766e;
+    --burgundy: #831843;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+    --bg: #faf7f2;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    padding: 40px 20px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--teal));
+    color: white;
+    padding: 56px 44px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(30, 64, 175, 0.25);
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    opacity: 0.25;
+  }
+  header::after {
+    content: '◈';
+    position: absolute;
+    bottom: -30px; left: -10px;
+    font-size: 200px;
+    color: rgba(255,255,255,0.05);
+  }
+  header h1 {
+    font-size: 2.8rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  header .subtitle {
+    font-size: 1.15rem;
+    opacity: 0.92;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  header .meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    position: relative;
+  }
+  header .meta span {
+    background: rgba(255,255,255,0.18);
+    padding: 7px 16px;
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  section {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-top: 4px solid var(--gold);
+    transition: box-shadow 0.2s;
+  }
+  section:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+  section h2 {
+    color: var(--primary-dark);
+    font-size: 1.55rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: -0.01em;
+  }
+  section h2 .num {
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: white;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  p { margin-bottom: 12px; }
+
+  .platforms {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .platform {
+    padding: 18px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid var(--border);
+  }
+  .platform.web { background: linear-gradient(135deg, #eff6ff, white); border-color: var(--primary); }
+  .platform.admin { background: linear-gradient(135deg, #f0fdfa, white); border-color: var(--teal); }
+  .platform.mobile { background: linear-gradient(135deg, #fef3c7, white); border-color: var(--gold); }
+  .platform .icon { font-size: 2rem; margin-bottom: 6px; }
+  .platform h4 { font-size: 1.05rem; margin-bottom: 6px; color: var(--primary-dark); }
+  .platform p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  th {
+    background: var(--primary-dark);
+    color: white;
+    text-align: left;
+    padding: 13px 16px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  td code {
+    background: var(--gold-light);
+    color: var(--burgundy);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.86rem;
+    font-family: 'SF Mono', Menlo, monospace;
+  }
+
+  .stack-tag {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tag-web { background: #dbeafe; color: var(--primary); }
+  .tag-mobile { background: #fef3c7; color: #92400e; }
+  .tag-both { background: #d1fae5; color: #065f46; }
+  .tag-backend { background: #e0e7ff; color: #3730a3; }
+
+  .weeks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .week-card {
+    background: linear-gradient(135deg, white, #fafbfc);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    transition: all 0.25s;
+  }
+  .week-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(212, 165, 116, 0.18);
+  }
+  .week-card .week-num {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  .week-card h4 {
+    color: var(--primary-dark);
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+  .week-card ul { list-style: none; padding: 0; }
+  .week-card li {
+    padding: 5px 0 5px 22px;
+    position: relative;
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+  .week-card li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.85rem;
+  }
+  .week-card li.mobile::before { content: '📱'; font-size: 0.78rem; }
+  .week-card li.web::before { content: '💻'; font-size: 0.78rem; }
+  .week-card li.both::before { content: '◆'; color: var(--teal); }
+
+  .scope-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .scope-card { padding: 22px; border-radius: 12px; }
+  .scope-card.in {
+    background: linear-gradient(135deg, #f0fdf4, #ffffff);
+    border-left: 5px solid var(--success);
+  }
+  .scope-card.out {
+    background: linear-gradient(135deg, #fef2f2, #ffffff);
+    border-left: 5px solid var(--danger);
+  }
+  .scope-card h4 { margin-bottom: 14px; font-size: 1.15rem; }
+  .scope-card.in h4 { color: var(--success); }
+  .scope-card.out h4 { color: var(--danger); }
+  .scope-card ul { list-style: none; padding: 0; }
+  .scope-card li { padding: 5px 0 5px 26px; position: relative; font-size: 0.92rem; }
+  .scope-card.in li::before { content: '✓'; color: var(--success); position: absolute; left: 0; font-weight: bold; }
+  .scope-card.out li::before { content: '✕'; color: var(--danger); position: absolute; left: 0; font-weight: bold; }
+
+  .highlight {
+    background: linear-gradient(135deg, var(--gold-light), white);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 18px 0;
+  }
+  .highlight strong { color: var(--burgundy); }
+  .highlight p:last-child { margin-bottom: 0; }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .role-card {
+    padding: 22px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+  }
+  .role-card.dev {
+    background: linear-gradient(135deg, #eff6ff, white);
+    border-color: var(--primary);
+  }
+  .role-card.client {
+    background: linear-gradient(135deg, #fffbeb, white);
+    border-color: var(--gold);
+  }
+  .role-card h4 { margin-bottom: 14px; font-size: 1.1rem; }
+  .role-card.dev h4 { color: var(--primary-dark); }
+  .role-card.client h4 { color: var(--burgundy); }
+  .role-card ul { list-style: none; padding: 0; }
+  .role-card li { padding: 6px 0 6px 26px; position: relative; font-size: 0.93rem; }
+  .role-card.dev li::before { content: '⚙'; position: absolute; left: 0; color: var(--primary); }
+  .role-card.client li::before { content: '★'; position: absolute; left: 0; color: var(--gold); }
+
+  .folder {
+    background: #1e293b;
+    color: #e2e8f0;
+    font-family: 'SF Mono', Menlo, monospace;
+    padding: 22px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  .folder .comment { color: #94a3b8; }
+  .folder .folder-name { color: var(--gold); font-weight: 600; }
+
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  footer .brand {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--primary-dark);
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 20px 12px; }
+    header { padding: 36px 24px; }
+    header h1 { font-size: 1.9rem; }
+    section { padding: 22px; }
+    .scope-grid, .role-grid, .platforms { grid-template-columns: 1fr; }
+    th, td { padding: 10px 12px; font-size: 0.88rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>SAFAR — MVP Roadmap</h1>
+  <p class="subtitle">Digital Museum Guide of the Silk Road · Web + Admin + Mobile · 1.5 oylik plan (6 hafta)</p>
+  <div class="meta">
+    <span>📅 1.5 oy</span>
+    <span>🌍 5 shahar</span>
+    <span>🗣️ 3 til (EN · UZ · RU)</span>
+    <span>💻 Web</span>
+    <span>🛠️ Admin Panel</span>
+    <span>📱 Mobile (iOS + Android)</span>
+    <span>📍 GPS auto-play</span>
+    <span>🗺️ Mapbox</span>
+    <span>💳 Uzum Merchant</span>
+    <span>🏨 Booking.com</span>
+    <span>🖥️ VPS (airnet.uz)</span>
+    <span>☁️ Cloudflare CDN</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">1</span>Loyiha haqida</h2>
+  <p><strong>Safar</strong> — O'zbekistondagi 5 ta Buyuk Ipak Yo'li shahri (Toshkent, Samarqand, Surxondaryo, Buxoro, Xiva) uchun premium darajadagi raqamli muzey gid platformasi. Xalqaro turistlarga tarixiy obidalar haqida professional ma'lumot, GPS bilan avtomatik audio playback, va madaniy tajriba beradi.</p>
+  <div class="highlight">
+    <p><strong>MVP maqsadi:</strong> 1.5 oyda mijozga 3 ta ishlaydigan platformani topshirish — Web + Admin Panel + Mobile (iOS/Android). Mijoz o'zi content (matn, audio, rasm) qo'shadigan dinamik tizim — kodga tegmasdan admin paneldan barcha narsani boshqarish imkoniyati.</p>
+  </div>
+
+  <div class="platforms">
+    <div class="platform web">
+      <div class="icon">💻</div>
+      <h4>Web (Public)</h4>
+      <p>Next.js 15 · SEO · 3 til</p>
+    </div>
+    <div class="platform admin">
+      <div class="icon">🛠️</div>
+      <h4>Admin Panel</h4>
+      <p>Dynamic CMS · Bulk import</p>
+    </div>
+    <div class="platform mobile">
+      <div class="icon">📱</div>
+      <h4>Mobile App</h4>
+      <p>React Native (Expo) · Background GPS</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>Rolimizning aniqligi</h2>
+  <div class="role-grid">
+    <div class="role-card dev">
+      <h4>Bizning ish (Developer)</h4>
+      <ul>
+        <li>Backend (sifatli, type-safe, dinamik)</li>
+        <li>Frontend Web (Next.js 15)</li>
+        <li>Admin Panel (dynamic forms + bulk import)</li>
+        <li>Mobile (React Native + Expo)</li>
+        <li>Mapbox + GPS auto-play (har 3 platforma)</li>
+        <li>Audio player + transcript</li>
+        <li>Stripe subscription</li>
+        <li>3 til + i18n</li>
+        <li>EAS Build + production deploy</li>
+        <li>Mobile real GPS test</li>
+      </ul>
+    </div>
+    <div class="role-card client">
+      <h4>Mijoz ishi (To'liq mas'uliyat)</h4>
+      <ul>
+        <li>Default ma'lumotlarni AI bilan tayyorlash</li>
+        <li>Matn (monument scripts) yozish</li>
+        <li>TTS audio yaratish</li>
+        <li>Rasm/video yig'ish</li>
+        <li>Manba (citation) qo'shish</li>
+        <li>Landmark koordinatalari</li>
+        <li>Comfort info to'ldirish</li>
+        <li>Til tarjimalari (EN/UZ/RU)</li>
+        <li>Subscription narxlarini sozlash</li>
+        <li>Phase 2'da: professional voice talent</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight" style="margin-top: 20px;">
+    <p><strong>Falsafa:</strong> Backend sifatli va type-safe (Zod shared schema) bo'lsa — har bir yangi feature web va mobile'da tezda namoyon bo'ladi. <code>packages/shared</code> orqali backend o'zgarishi avtomatik web + mobile'ga tarqaladi.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">3</span>Loyiha tuzilishi (Monorepo)</h2>
+  <pre class="folder"><span class="folder-name">safar-web/</span>
+├── PROGRESS.md                <span class="comment"># har qadam yozib boriladi</span>
+├── ROADMAP.html               <span class="comment"># shu fayl</span>
+├── package.json               <span class="comment"># bun workspaces</span>
+│
+├── <span class="folder-name">packages/</span>
+│   └── <span class="folder-name">shared/</span>            <span class="comment"># Zod schemalar, TypeScript tiplar</span>
+│       ├── src/schemas/   <span class="comment"># landmark, user, audio...</span>
+│       └── src/types/
+│
+├── <span class="folder-name">safar-backend/</span>          <span class="comment"># Bun + Hono + Zod + Drizzle</span>
+│   ├── src/routes/
+│   ├── src/db/schema.ts
+│   ├── drizzle/migrations/
+│   └── package.json
+│
+├── <span class="folder-name">safar-frontend/</span>         <span class="comment"># Next.js 15 + Tailwind + shadcn/ui</span>
+│   ├── src/app/
+│   ├── src/components/
+│   ├── src/admin/         <span class="comment"># admin panel routes</span>
+│   └── package.json
+│
+└── <span class="folder-name">safar-mobile/</span>           <span class="comment"># Expo + React Native + NativeWind</span>
+    ├── app/               <span class="comment"># Expo Router file-based routes</span>
+    ├── components/
+    ├── eas.json           <span class="comment"># EAS Build config</span>
+    └── package.json</pre>
+</section>
+
+<section>
+  <h2><span class="num">4</span>Texnologiya stack</h2>
+  <table>
+    <thead>
+      <tr><th>Qatlam</th><th>Texnologiya</th><th>Platforma</th><th>Sabab</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Backend runtime</td><td><strong>Bun</strong></td><td><span class="stack-tag tag-backend">Backend</span></td><td>Tez, modern</td></tr>
+      <tr><td>API framework</td><td><strong>Hono</strong></td><td><span class="stack-tag tag-backend">Backend</span></td><td>Type-safe, yengil</td></tr>
+      <tr><td>Validation</td><td><strong>Zod</strong></td><td><span class="stack-tag tag-both">Hammasi</span></td><td>Shared schemas</td></tr>
+      <tr><td>ORM</td><td><strong>Drizzle</strong></td><td><span class="stack-tag tag-backend">Backend</span></td><td>Bun bilan eng mosi</td></tr>
+      <tr><td>Database</td><td><strong>PostgreSQL 16</strong> (VPS'da)</td><td><span class="stack-tag tag-backend">Backend</span></td><td>Bitta server, oson backup</td></tr>
+      <tr><td>Frontend framework</td><td><strong>Next.js 15</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>SSR, SEO, i18n</td></tr>
+      <tr><td>Mobile framework</td><td><strong>Expo SDK + React Native</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>iOS + Android bitta kod</td></tr>
+      <tr><td>Mobile routing</td><td><strong>Expo Router</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>File-based, Next.js'ga o'xshash</td></tr>
+      <tr><td>Styling (web)</td><td><strong>Tailwind + shadcn/ui</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>Premium komponentlar</td></tr>
+      <tr><td>Styling (mobile)</td><td><strong>NativeWind</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>Tailwind syntax RN'da</td></tr>
+      <tr><td>Map (web)</td><td><strong>Mapbox GL JS</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>Custom Islamic style</td></tr>
+      <tr><td>Map (mobile)</td><td><strong>@rnmapbox/maps</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>Native performance</td></tr>
+      <tr><td>GPS (web)</td><td><strong>Geolocation API</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>"Start Tour" pattern</td></tr>
+      <tr><td>GPS (mobile)</td><td><strong>expo-location</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>Background GPS!</td></tr>
+      <tr><td>Audio (web)</td><td><strong>react-h5-audio-player</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>HTML5, customizable</td></tr>
+      <tr><td>Audio (mobile)</td><td><strong>expo-av</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>Lock screen playback</td></tr>
+      <tr><td>Auth</td><td><strong>better-auth</strong></td><td><span class="stack-tag tag-both">Hammasi</span></td><td>Bun + RN qo'llab-quvvatlaydi</td></tr>
+      <tr><td>Payments (yagona)</td><td><strong>Uzum Merchant</strong></td><td><span class="stack-tag tag-both">Web + Mobile</span></td><td>UZS · Uzcard · Humo · Visa · Mastercard · Apple Pay · Google Pay</td></tr>
+      <tr><td>To'lov modeli</td><td><strong>One-time</strong> (recurring yo'q)</td><td><span class="stack-tag tag-both">Web + Mobile</span></td><td>Day Pass, City Pack, Silk Road Pass — bir martalik xarid</td></tr>
+      <tr><td>Hotel booking</td><td><strong>Booking.com Affiliate</strong></td><td><span class="stack-tag tag-both">Web + Mobile</span></td><td>Affiliate komissiya, tracking link</td></tr>
+      <tr><td>File storage</td><td><strong>Cloudflare R2</strong></td><td><span class="stack-tag tag-backend">Backend</span></td><td>S3'dan 10x arzon</td></tr>
+      <tr><td>i18n (web)</td><td><strong>next-intl</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>App Router uchun ideal</td></tr>
+      <tr><td>i18n (mobile)</td><td><strong>i18next + expo-localization</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>RN standart</td></tr>
+      <tr><td>Data fetching</td><td><strong>TanStack Query</strong></td><td><span class="stack-tag tag-both">Web + Mobile</span></td><td>Bir xil API</td></tr>
+      <tr><td>Mobile build</td><td><strong>EAS Build</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>iOS + Android cloud build</td></tr>
+      <tr><td>Mobile distribution</td><td><strong>TestFlight + Play Internal</strong></td><td><span class="stack-tag tag-mobile">Mobile</span></td><td>MVP beta uchun</td></tr>
+      <tr><td>Monitoring</td><td><strong>Sentry</strong></td><td><span class="stack-tag tag-both">Hammasi</span></td><td>Web + RN</td></tr>
+      <tr><td>Analytics</td><td><strong>Plausible</strong></td><td><span class="stack-tag tag-web">Web</span></td><td>Privacy-friendly</td></tr>
+      <tr><td>Email</td><td><strong>Resend</strong></td><td><span class="stack-tag tag-backend">Backend</span></td><td>Modern API</td></tr>
+      <tr><td>VPS (asosiy)</td><td><strong>airnet.uz</strong> (Tashkent, 4 vCPU / 8 GB / 80 GB SSD)</td><td><span class="stack-tag tag-backend">Infra</span></td><td>Mahalliy turistlarga tez, Uzbek support, UZS billing</td></tr>
+      <tr><td>VPS (alternativ)</td><td><strong>Hetzner CX22</strong> (EU)</td><td><span class="stack-tag tag-backend">Infra</span></td><td>Backup variant, agar airnet.uz spec yetmasa</td></tr>
+      <tr><td>CDN</td><td><strong>Cloudflare</strong> (bepul tier)</td><td><span class="stack-tag tag-backend">Infra</span></td><td>Global edge cache (UZ + EU + Gulf + Asia), DDoS protection</td></tr>
+      <tr><td>OS</td><td><strong>Ubuntu 22.04 LTS</strong></td><td><span class="stack-tag tag-backend">Infra</span></td><td>Standart, barqaror</td></tr>
+      <tr><td>Reverse proxy</td><td><strong>Caddy 2</strong></td><td><span class="stack-tag tag-backend">Infra</span></td><td>Auto HTTPS (Let's Encrypt)</td></tr>
+      <tr><td>Process manager</td><td><strong>systemd</strong></td><td><span class="stack-tag tag-backend">Infra</span></td><td>Linux native, Bun + Next.js</td></tr>
+      <tr><td>Firewall</td><td><strong>ufw</strong></td><td><span class="stack-tag tag-backend">Infra</span></td><td>22, 80, 443 portlar; Cloudflare proxy whitelist</td></tr>
+      <tr><td>CI/CD</td><td><strong>GitHub Actions</strong> → SSH</td><td><span class="stack-tag tag-backend">Infra</span></td><td>Bepul, push'da auto-deploy</td></tr>
+      <tr><td>Backup</td><td><strong>pg_dump → R2</strong> (cron)</td><td><span class="stack-tag tag-backend">Infra</span></td><td>Kunlik avtomatik backup</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">5</span>6 haftalik MVP Roadmap</h2>
+  <div class="weeks">
+
+    <div class="week-card">
+      <span class="week-num">HAFTA 1</span>
+      <h4>Foundation + VPS</h4>
+      <ul>
+        <li><strong>airnet.uz VPS</strong> provisioning</li>
+        <li>SSH key + ufw firewall</li>
+        <li>Caddy + Postgres + systemd o'rnatish</li>
+        <li>Cloudflare DNS + proxy + SSL</li>
+        <li>Domain ulanish (safar.uz?)</li>
+        <li>Monorepo + bun workspaces</li>
+        <li><code>packages/shared</code> (Zod schemas)</li>
+        <li class="web">Backend (Bun + Hono + Zod)</li>
+        <li class="web">Postgres ulanish (VPS'da)</li>
+        <li class="web">Dinamik DB schema (Drizzle)</li>
+        <li class="web">Frontend skeleton (Next.js 15)</li>
+        <li class="mobile">Mobile skeleton (Expo + Router)</li>
+        <li class="both">better-auth (web + mobile)</li>
+      </ul>
+    </div>
+
+    <div class="week-card">
+      <span class="week-num">HAFTA 2</span>
+      <h4>Mapbox (Web + Mobile)</h4>
+      <ul>
+        <li>Mapbox Studio'da Islamic style</li>
+        <li class="web">Mapbox GL JS xarita</li>
+        <li class="mobile">@rnmapbox/maps integratsiya</li>
+        <li class="both">Custom landmark pin'lar</li>
+        <li class="both">Filter bar</li>
+        <li class="both">Marker click → landmark sahifa</li>
+        <li class="web">Gorizontal landmark tugma'lar</li>
+        <li>Backend: cities + landmarks API</li>
+      </ul>
+    </div>
+
+    <div class="week-card">
+      <span class="week-num">HAFTA 3</span>
+      <h4>GPS Auto-play + Audio</h4>
+      <ul>
+        <li class="web">Geolocation API + permission</li>
+        <li class="web">"Start Tour" pattern</li>
+        <li class="mobile">expo-location background GPS</li>
+        <li class="mobile">Foreground service</li>
+        <li class="mobile">Lock screen audio (expo-av)</li>
+        <li class="both">Haversine distance (50–100m)</li>
+        <li class="both">Audio player + transcript</li>
+        <li class="both">Til o'zgartirish</li>
+        <li class="mobile">Real device GPS test</li>
+      </ul>
+    </div>
+
+    <div class="week-card">
+      <span class="week-num">HAFTA 4</span>
+      <h4>Admin Panel (chuqur · Web only)</h4>
+      <ul>
+        <li class="web">Admin auth + role'lar</li>
+        <li class="web">Landmark CRUD (dynamic forms)</li>
+        <li class="web">Audio / rasm upload (R2)</li>
+        <li class="web">Bulk import (CSV / JSON)</li>
+        <li class="web">Til boshqaruvi UI</li>
+        <li class="web">Subscription tier konfig</li>
+        <li class="web">Comfort info CRUD</li>
+        <li class="web">Audit log</li>
+        <li>Backend: barcha admin API'lar</li>
+      </ul>
+    </div>
+
+    <div class="week-card">
+      <span class="week-num">HAFTA 5</span>
+      <h4>Payments + Booking + Polish</h4>
+      <ul>
+        <li class="web">Uzum Merchant integratsiya</li>
+        <li class="web">One-time to'lovlar (Day Pass / City Pack / Silk Road Pass)</li>
+        <li class="web">Visa/MC + Uzcard/Humo + Apple/Google Pay</li>
+        <li class="both">Access gating (tier bo'yicha kontent)</li>
+        <li class="both">Booking.com Affiliate widget + tracking</li>
+        <li class="both">Commission tracking (admin)</li>
+        <li class="both">User Notes (shareable)</li>
+        <li class="both">Statik comfort info</li>
+        <li class="both">i18n: EN + UZ + RU</li>
+        <li class="both">Landmark sahifa polish (TZ §7.2)</li>
+        <li>Backend: Uzum webhook (payment success)</li>
+      </ul>
+    </div>
+
+    <div class="week-card">
+      <span class="week-num">HAFTA 6</span>
+      <h4>Launch (3 platforma)</h4>
+      <ul>
+        <li>VPS production deploy (airnet.uz)</li>
+        <li>GitHub Actions → SSH auto-deploy</li>
+        <li>Cloudflare CDN + cache rules</li>
+        <li>Postgres backup cron → R2</li>
+        <li class="mobile">EAS Build (iOS + Android)</li>
+        <li class="mobile">TestFlight + Play Internal</li>
+        <li class="both">Sentry sozlash</li>
+        <li class="web">Plausible analytics</li>
+        <li class="web">SEO + sitemap</li>
+        <li class="mobile">Real GPS field test</li>
+        <li>Demo polish + bug fix sprint</li>
+        <li>Mijozga topshirish</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="highlight" style="margin-top: 20px;">
+    <p><strong>Belgilar:</strong> 💻 = Web · 📱 = Mobile · ◆ (oltin) = Hammasi · ◆ (yashil) = Web + Mobile</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">6</span>MVP Scope</h2>
+  <div class="scope-grid">
+    <div class="scope-card in">
+      <h4>MVP'da bor</h4>
+      <ul>
+        <li>Web sayt (Next.js 15, 3 til, SEO)</li>
+        <li>Mustahkam Admin Panel</li>
+        <li>Mobile app (iOS + Android, Expo)</li>
+        <li>Mapbox xarita (har 3 platformada)</li>
+        <li>GPS auto-play (web: Start Tour, mobile: background)</li>
+        <li>Audio player + transcript</li>
+        <li>5 shahar struktura tayyor</li>
+        <li>3 til: EN + UZ + RU</li>
+        <li>Bulk data import (CSV/JSON)</li>
+        <li>Dynamic forms (admin)</li>
+        <li>Uzum Merchant (Visa/MC/Uzcard/Humo/Apple Pay/Google Pay)</li>
+        <li>One-time to'lov (Day Pass / City Pack / Silk Road Pass)</li>
+        <li>Booking.com Affiliate (hotel bron + komissiya)</li>
+        <li>Commission tracking (admin)</li>
+        <li>User Notes (shareable)</li>
+        <li>Statik comfort info</li>
+        <li>Manba (citation) tizimi</li>
+        <li>Type-safe shared schemas</li>
+        <li>Mobile lock screen audio</li>
+      </ul>
+    </div>
+    <div class="scope-card out">
+      <h4>MVP'dan tashqarida</h4>
+      <ul>
+        <li>Ask Safar AI (Phase 1C)</li>
+        <li>XP gamification + jismoniy sovg'a</li>
+        <li>Restaurant marketplace (Phase 2)</li>
+        <li>Booking.com Demand API (true auto-book — Phase 2 partnership kerak)</li>
+        <li>Offline city packs (PWA + mobile cache)</li>
+        <li>Real-time crowd data (statik MVP)</li>
+        <li>Arabic RTL, Chinese, French, German, Turkish</li>
+        <li>Telegram Mini App</li>
+        <li>Recurring subscription (faqat one-time MVP'da)</li>
+        <li>Mobile in-app purchases (web Uzum MVP)</li>
+        <li>Professional voice talent</li>
+        <li>App Store / Play Store public release (beta only)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">7</span>Dinamik DB asoslari</h2>
+  <p>Mijoz <strong>kodga tegmasdan</strong> admin paneldan hamma narsani boshqaradi:</p>
+  <table>
+    <thead>
+      <tr><th>Imkoniyat</th><th>Texnik yechim</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Yangi til qo'shish</td><td><code>languages</code> jadvali</td></tr>
+      <tr><td>Yangi shahar qo'shish</td><td><code>cities</code> jadvali</td></tr>
+      <tr><td>Yangi landmark + barcha maydon</td><td><code>landmarks</code> + <code>landmark_translations</code></td></tr>
+      <tr><td>Maxsus maydon (kod tegmasdan)</td><td><code>metadata</code> JSONB column</td></tr>
+      <tr><td>Kategoriya boshqaruvi</td><td><code>categories</code> jadvali</td></tr>
+      <tr><td>UI matnini tarjima qilish</td><td><code>ui_translations</code></td></tr>
+      <tr><td>Access tier'lari va narxi</td><td><code>access_plans</code> (one-time)</td></tr>
+      <tr><td>Audio / rasm yuklash</td><td><code>media_files</code> (R2 link)</td></tr>
+      <tr><td>Manba (citation)</td><td><code>sources</code></td></tr>
+      <tr><td>Content lifecycle</td><td><code>content_status</code> enum</td></tr>
+      <tr><td>Yaqin facilities (hojatxona, ATM)</td><td><code>nearby_facilities</code></td></tr>
+      <tr><td>User notes</td><td><code>user_notes</code> (private + shareable)</td></tr>
+      <tr><td>Bulk import audit</td><td><code>import_jobs</code> + status tracking</td></tr>
+      <tr><td>To'lov tarixini saqlash</td><td><code>payments</code> jadvali (Uzum, one-time)</td></tr>
+      <tr><td>User access (sotib olingan tier)</td><td><code>user_access</code> (lifetime city pack, day pass expiry)</td></tr>
+      <tr><td>Hotel taklifini saqlash</td><td><code>hotels</code> + <code>booking_clicks</code> (commission tracking)</td></tr>
+      <tr><td>Komissiya hisobi</td><td><code>commissions</code> + <code>partner_payouts</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">8</span>Asosiy printsiplar</h2>
+  <div class="highlight">
+    <p><strong>1. Backend = oltin manba.</strong> Sifatli, type-safe backend bo'lsa — har yangi feature web + mobile'ga 1 kunda yetkaziladi (Zod shared schema + TanStack Query).</p>
+    <p><strong>2. Hech narsa hardcoded emas</strong> — barcha kontent, til, narx, kategoriya admin paneldan boshqariladi.</p>
+    <p><strong>3. Type-safe top to bottom</strong> — <code>packages/shared</code>'da Zod schema'lar, backend va frontend va mobile bir xil tipni ko'radi.</p>
+    <p><strong>4. Mobile-first</strong> — turistlar telefondan kiradi. Mobile app real GPS bilan field-test qilinadi.</p>
+    <p><strong>5. Premium estetika</strong> — Mapbox Studio'da custom Islamic-Silk Road style, shadcn/ui (web), NativeWind (mobile).</p>
+    <p><strong>6. Content-status workflow</strong> — AI draft → human review → publish. AI content tasodifan public ko'rinmaydi.</p>
+    <p><strong>7. Mijoz mustaqilligi</strong> — content (matn, audio, rasm) to'liq mijoz mas'uliyati. Admin panel orqali to'ldiriladi.</p>
+  </div>
+</section>
+
+<footer>
+  <p class="brand">SAFAR — The Digital Silk Road Companion</p>
+  <p>MVP Roadmap v1.1 · Web + Admin + Mobile · 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
