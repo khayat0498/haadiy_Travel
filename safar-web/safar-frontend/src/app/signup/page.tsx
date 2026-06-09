@@ -1,51 +1,8 @@
-"use client";
-
-import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { SafarLogo } from "@/components/safar/SafarLogo";
 
-const MOCK_CREDENTIALS = {
-  identifier: "test@gmail.com",
-  password: "test123",
-};
-
-export default function LoginPage() {
-  const router = useRouter();
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    // Small delay for UX (feels like real auth)
-    await new Promise((r) => setTimeout(r, 400));
-
-    const ok =
-      identifier.trim().toLowerCase() === MOCK_CREDENTIALS.identifier &&
-      password === MOCK_CREDENTIALS.password;
-
-    if (ok) {
-      localStorage.setItem(
-        "haadiy_auth",
-        JSON.stringify({
-          email: identifier.trim().toLowerCase(),
-          name: "Test User",
-          loggedInAt: Date.now(),
-        }),
-      );
-      router.push("/dashboard");
-    } else {
-      setError("Invalid credentials. Try test@gmail.com / test123");
-      setLoading(false);
-    }
-  }
-
+export default function SignupPage() {
   return (
     <main className="relative min-h-screen flex items-center justify-center px-6 py-12 overflow-hidden">
       {/* Background image — overflows on mobile to preserve aspect ratio */}
@@ -99,13 +56,28 @@ export default function LoginPage() {
           }}
         >
           <h1 className="font-heading text-2xl md:text-3xl font-semibold mb-1 text-center text-white">
-            Welcome Back
+            Begin Your Journey
           </h1>
           <p className="text-sm text-muted-foreground text-center mb-7">
-            Continue your Silk Road journey
+            Join thousands exploring the Silk Road
           </p>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-xs font-medium uppercase tracking-widest text-muted-foreground mb-1.5"
+              >
+                Full name
+              </label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Ali Karimov"
+                className="w-full h-11 px-4 rounded-xl ring-1 ring-border bg-background/50 backdrop-blur focus:ring-2 focus:ring-cyan/50 outline-none transition"
+                autoComplete="name"
+              />
+            </div>
             <div>
               <label
                 htmlFor="identifier"
@@ -116,54 +88,55 @@ export default function LoginPage() {
               <input
                 id="identifier"
                 type="text"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
                 placeholder="ali@haadiy.com or +998 90 ..."
                 className="w-full h-11 px-4 rounded-xl ring-1 ring-border bg-background/50 backdrop-blur focus:ring-2 focus:ring-cyan/50 outline-none transition"
                 autoComplete="username"
-                required
               />
             </div>
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label
-                  htmlFor="password"
-                  className="block text-xs font-medium uppercase tracking-widest text-muted-foreground"
-                >
-                  Password
-                </label>
-                <Link
-                  href="/forgot"
-                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Forgot?
-                </Link>
-              </div>
+              <label
+                htmlFor="password"
+                className="block text-xs font-medium uppercase tracking-widest text-muted-foreground mb-1.5"
+              >
+                Password
+              </label>
               <input
                 id="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="At least 8 characters"
                 className="w-full h-11 px-4 rounded-xl ring-1 ring-border bg-background/50 backdrop-blur focus:ring-2 focus:ring-cyan/50 outline-none transition"
-                autoComplete="current-password"
-                required
+                autoComplete="new-password"
+                minLength={8}
               />
             </div>
 
-            {error && (
-              <div
-                role="alert"
-                className="text-xs px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300"
-              >
-                {error}
-              </div>
-            )}
+            <label className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed pt-1 cursor-pointer">
+              <input
+                type="checkbox"
+                className="mt-0.5 size-4 rounded border-border accent-cyan cursor-pointer"
+                required
+              />
+              <span>
+                I agree to Haadiy&apos;s{" "}
+                <Link
+                  href="/terms"
+                  className="text-foreground/80 underline underline-offset-2 hover:text-foreground"
+                >
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy"
+                  className="text-foreground/80 underline underline-offset-2 hover:text-foreground"
+                >
+                  Privacy Policy
+                </Link>
+              </span>
+            </label>
 
             <button
               type="submit"
-              disabled={loading}
-              className="group relative w-full h-11 rounded-full font-medium transition-all overflow-hidden mt-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="group relative w-full h-11 rounded-full font-medium transition-all overflow-hidden mt-2"
               style={{
                 background:
                   "linear-gradient(135deg, oklch(0.92 0.18 86), oklch(0.78 0.16 70))",
@@ -172,12 +145,11 @@ export default function LoginPage() {
                   "0 12px 30px -8px oklch(0.85 0.16 86 / 50%), inset 0 1px 0 oklch(0.95 0.1 86)",
               }}
             >
-              <span className="relative z-10">
-                {loading ? "Signing in..." : "Sign In"}
-              </span>
+              <span className="relative z-10">Create Account</span>
             </button>
           </form>
 
+          {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px bg-border" />
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -187,21 +159,15 @@ export default function LoginPage() {
           </div>
 
           <p className="text-center text-sm text-muted-foreground">
-            New to Haadiy?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="text-gold font-medium hover:text-gold-glow transition-colors"
             >
-              Create an account
+              Sign in
             </Link>
           </p>
         </div>
-
-        {/* Demo hint */}
-        <p className="mt-6 text-center text-[11px] text-white/60">
-          Demo: <span className="text-white/80">test@gmail.com</span> ·{" "}
-          <span className="text-white/80">test123</span>
-        </p>
       </div>
     </main>
   );

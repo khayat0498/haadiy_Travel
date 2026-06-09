@@ -6,7 +6,7 @@ import { Home, Map, MessageCircle, BookOpen, User } from "lucide-react";
 
 const tabs = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/explore", label: "Explore", icon: Map },
+  { href: "/map", label: "Maps", icon: Map },
   { href: "/ai", label: "Ask AI", icon: MessageCircle },
   { href: "/book", label: "Book", icon: BookOpen },
   { href: "/profile", label: "Profile", icon: User },
@@ -16,7 +16,7 @@ export function BottomTabBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 glass border-t border-border/60 backdrop-blur-xl">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-border/60 backdrop-blur-xl">
       <div className="container max-w-2xl mx-auto px-2 flex items-stretch justify-around">
         {tabs.map((tab) => {
           const Icon = tab.icon;

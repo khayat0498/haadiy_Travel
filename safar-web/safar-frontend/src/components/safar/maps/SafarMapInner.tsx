@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTheme } from "@/components/providers";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
+
+// CartoDB tile providers — free, attribution required
+const TILES = {
+  dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+} as const;
 
 export type MapMarker = {
   id: string;
@@ -20,6 +27,7 @@ type Props = {
   markers: MapMarker[];
   height?: string;
   className?: string;
+  tileStyle?: "light" | "dark" | "auto";
 };
 
 // Custom gold pin (matches Safar brand)
@@ -50,12 +58,22 @@ export function SafarMap({
   markers,
   height = "400px",
   className = "",
+  tileStyle = "auto",
 }: Props) {
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const effectiveStyle =
+    tileStyle === "auto"
+      ? resolvedTheme === "light"
+        ? "light"
+        : "dark"
+      : tileStyle;
+  const tileUrl = effectiveStyle === "light" ? TILES.light : TILES.dark;
 
   if (!mounted) {
     return (
@@ -68,7 +86,7 @@ export function SafarMap({
 
   return (
     <div
-      className={`rounded-2xl overflow-hidden ring-1 ring-border ${className}`}
+      className={`rounded-2xl overflow-hidden ring-1 ring-border safar-map-${effectiveStyle} ${className}`}
       style={{ height }}
     >
       <MapContainer
@@ -77,24 +95,27 @@ export function SafarMap({
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
       >
-        {/* Dark theme tiles via CartoDB Dark Matter (free, matches our theme) */}
+        {/* Tiles auto-switch with theme (key forces remount on theme change) */}
         <TileLayer
+          key={tileUrl}
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url={tileUrl}
         />
         {markers.map((m) => (
           <Marker key={m.id} position={m.position} icon={goldPin}>
-            <Popup>
-              <div className="font-medium text-sm mb-0.5">{m.name}</div>
+            <Popup maxWidth={220} minWidth={160}>
+              <div className="text-[13px] font-semibold leading-tight mb-1">
+                {m.name}
+              </div>
               {m.description && (
-                <div className="text-xs text-gray-600 mb-1.5">
+                <div className="text-[11px] text-gray-600 mb-1.5 leading-snug line-clamp-2">
                   {m.description}
                 </div>
               )}
               {m.href && (
                 <Link
                   href={m.href}
-                  className="text-xs text-blue-600 hover:underline"
+                  className="text-[11px] font-medium text-cyan-700 hover:underline"
                 >
                   View details →
                 </Link>

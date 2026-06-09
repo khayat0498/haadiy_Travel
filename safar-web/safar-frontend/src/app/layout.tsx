@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
-import { Header } from "@/components/safar/Header";
-import { BottomTabBar } from "@/components/safar/BottomTabBar";
+import { LayoutShell } from "@/components/safar/LayoutShell";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -27,22 +27,25 @@ export const metadata: Metadata = {
     "Premium digital companion for exploring Tashkent, Samarkand, Bukhara, Khiva, and Surkhandarya. GPS-triggered audio, museum-quality content.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("theme")?.value;
+  const theme: "light" | "dark" = themeCookie === "light" ? "light" : "dark";
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
+      className={`${theme} ${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
+      style={{ colorScheme: theme }}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>
-          <Header />
-          <main className="flex-1 pb-20">{children}</main>
-          <BottomTabBar />
+        <Providers initialTheme={theme}>
+          <LayoutShell>{children}</LayoutShell>
         </Providers>
       </body>
     </html>

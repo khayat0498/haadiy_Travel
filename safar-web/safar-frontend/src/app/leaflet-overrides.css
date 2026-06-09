@@ -1,8 +1,17 @@
-/* Leaflet overrides — match Safar dark theme */
+/* Leaflet overrides — adapts to current theme via CSS variables */
 
 .leaflet-container {
   background: var(--background);
   font-family: var(--font-sans);
+}
+
+/* Silver/desaturated tint for light tiles — softer than pure white */
+.safar-map-light .leaflet-tile-pane {
+  filter: grayscale(35%) brightness(94%) contrast(103%);
+}
+
+.safar-map-light {
+  background: oklch(0.92 0 0); /* silver fallback while tiles load */
 }
 
 .leaflet-popup-content-wrapper,
@@ -10,8 +19,13 @@
   background: var(--card);
   color: var(--foreground);
   border: 1px solid var(--border);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   border-radius: 0.75rem;
+}
+
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .leaflet-popup-content {
@@ -26,14 +40,17 @@
 .leaflet-popup-close-button {
   color: var(--foreground) !important;
   font-size: 1.25rem !important;
+  opacity: 0.7;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
   color: var(--gold) !important;
+  opacity: 1;
 }
 
+/* Attribution */
 .leaflet-control-attribution {
-  background: rgba(15, 36, 40, 0.85) !important;
+  background: oklch(var(--card) / 0.85) !important;
   color: var(--muted-foreground) !important;
   font-size: 10px !important;
   backdrop-filter: blur(8px);
@@ -43,6 +60,7 @@
   color: var(--cyan) !important;
 }
 
+/* Zoom controls — light and dark */
 .leaflet-control-zoom a {
   background: var(--card) !important;
   color: var(--foreground) !important;

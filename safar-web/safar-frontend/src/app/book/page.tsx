@@ -16,11 +16,11 @@ export default function BookPage() {
   const [active, setActive] = useState<TabId>("tours");
 
   return (
-    <div className="px-5 py-8">
+    <div className="px-5 py-6 md:py-10">
       <div className="container max-w-5xl mx-auto">
         {/* Title */}
-        <div className="text-center mb-6">
-          <h1 className="font-heading text-3xl md:text-4xl font-semibold mb-1.5">
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="font-heading text-2xl md:text-4xl font-semibold mb-1.5">
             Book Services
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -28,8 +28,8 @@ export default function BookPage() {
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 justify-center mb-8 overflow-x-auto -mx-1 px-1 pb-1">
+        {/* Tabs — scroll on mobile, centered on desktop */}
+        <div className="flex gap-2 mb-6 md:mb-8 overflow-x-auto -mx-5 px-5 md:mx-0 md:px-0 md:justify-center pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = active === tab.id;
@@ -38,13 +38,13 @@ export default function BookPage() {
                 type="button"
                 key={tab.id}
                 onClick={() => setActive(tab.id)}
-                className={`shrink-0 inline-flex items-center gap-2 px-5 h-10 rounded-full font-medium text-sm transition-all ${
+                className={`shrink-0 inline-flex items-center gap-2 px-4 md:px-5 h-9 md:h-10 rounded-full font-medium text-xs md:text-sm transition-all ${
                   isActive
                     ? "bg-gold text-accent-foreground glow-gold"
                     : "ring-1 ring-border bg-card text-foreground/80 hover:ring-foreground/30"
                 }`}
               >
-                <Icon className="size-4" />
+                <Icon className="size-3.5 md:size-4" />
                 {tab.label}
               </button>
             );

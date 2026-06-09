@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, MapPin, Clock, BookOpen } from "lucide-react";
 import { AudioPlayer } from "@/components/safar/AudioPlayer";
+import { LandmarkGallery } from "@/components/safar/LandmarkGallery";
 import { SafarMap } from "@/components/safar/maps/SafarMap";
 import { mockLandmarks, mockTranscripts } from "@/mocks/landmarks";
 import { mockCities } from "@/mocks/cities";
@@ -39,16 +39,9 @@ export default async function LandmarkPage({
           {landmark.shortDescription}
         </p>
 
-        {/* Hero image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-8">
-          <Image
-            src={landmark.images[0]}
-            alt={landmark.name}
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
-          />
+        {/* Gallery carousel */}
+        <div className="mb-8">
+          <LandmarkGallery images={landmark.images} alt={landmark.name} />
         </div>
 
         {/* Interactive Audio Guide */}
@@ -117,31 +110,6 @@ export default async function LandmarkPage({
             ]}
           />
         </section>
-
-        {/* Gallery */}
-        {landmark.images.length > 1 && (
-          <section className="mb-12">
-            <h2 className="font-heading text-2xl font-semibold mb-4">
-              Gallery
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {landmark.images.slice(1).map((img, i) => (
-                <div
-                  key={i}
-                  className="relative aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-border"
-                >
-                  <Image
-                    src={img}
-                    alt={`${landmark.name} ${i + 2}`}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Overview placeholder */}
         <article className="prose prose-invert max-w-none">

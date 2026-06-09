@@ -79,6 +79,19 @@ export function AudioPlayer({
   const [transcriptOpen, setTranscriptOpen] = useState(false);
   const [language, setLanguage] = useState(defaultLanguage);
   const [langOpen, setLangOpen] = useState(false);
+  const [speedOpen, setSpeedOpen] = useState(false);
+  const speedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!speedOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (speedRef.current && !speedRef.current.contains(e.target as Node)) {
+        setSpeedOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [speedOpen]);
 
   const waveform = useMemo(() => generateWaveform(audioUrl, 60), [audioUrl]);
   const currentLang =
@@ -361,7 +374,8 @@ export function AudioPlayer({
 
       {/* Bottom row: speed, mute, transcript */}
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/60">
-        <div className="flex items-center gap-1">
+        {/* Speed — inline pills on desktop */}
+        <div className="hidden md:flex items-center gap-1">
           {SPEEDS.map((s) => (
             <button
               type="button"
@@ -376,6 +390,49 @@ export function AudioPlayer({
               {s}×
             </button>
           ))}
+        </div>
+
+        {/* Speed — dropdown on mobile */}
+        <div className="md:hidden relative" ref={speedRef}>
+          <button
+            type="button"
+            onClick={() => setSpeedOpen((v) => !v)}
+            className="inline-flex items-center gap-1 h-9 px-3 rounded-full ring-1 ring-border hover:ring-cyan/40 text-xs font-medium transition-colors tabular-nums"
+            aria-haspopup="menu"
+            aria-expanded={speedOpen}
+          >
+            {speed}×
+            <ChevronDown
+              className={`size-3.5 opacity-60 transition-transform ${
+                speedOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          {speedOpen && (
+            <div
+              role="menu"
+              className="absolute left-0 bottom-11 w-24 rounded-xl ring-1 ring-border bg-popover shadow-lg z-10 p-1"
+            >
+              {SPEEDS.map((s) => (
+                <button
+                  type="button"
+                  role="menuitem"
+                  key={s}
+                  onClick={() => {
+                    setSpeedAndApply(s);
+                    setSpeedOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-1.5 rounded-lg text-sm tabular-nums transition-colors ${
+                    s === speed
+                      ? "bg-cyan/15 text-cyan"
+                      : "hover:bg-foreground/5"
+                  }`}
+                >
+                  {s}×
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-1">
