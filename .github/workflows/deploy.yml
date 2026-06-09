@@ -17,9 +17,16 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/safarvps/safar/safar-web/safar-frontend
+            echo "=== Git pull ==="
             git -C /home/safarvps/safar pull origin main
+            echo "=== Last commit ==="
+            git -C /home/safarvps/safar log --oneline -3
+            echo "=== Bun install ==="
+            cd /home/safarvps/safar/safar-web/safar-frontend
             ~/.bun/bin/bun install
+            echo "=== Bun build ==="
             ~/.bun/bin/bun run build
+            echo "=== PM2 restart ==="
             pm2 restart haadiy_travel
-            echo "Deploy muvaffaqiyatli!"
+            pm2 list
+            echo "=== Deploy muvaffaqiyatli! ==="
