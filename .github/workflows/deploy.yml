@@ -27,6 +27,6 @@ jobs:
             echo "=== Bun build ==="
             ~/.bun/bin/bun run build
             echo "=== PM2 restart ==="
-            pm2 restart haadiy_travel
-            pm2 list
+            ~/.local/bin/pm2 restart haadiy_travel
+            ~/.local/bin/pm2 list
             echo "=== Deploy muvaffaqiyatli! ==="
