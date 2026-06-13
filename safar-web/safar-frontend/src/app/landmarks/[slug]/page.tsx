@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, MapPin, Clock, BookOpen } from "lucide-react";
 import { AudioPlayer } from "@/components/safar/AudioPlayer";
 import { LandmarkGallery } from "@/components/safar/LandmarkGallery";
-import { SafarMap } from "@/components/safar/maps/SafarMap";
 import { mockLandmarks, mockTranscripts } from "@/mocks/landmarks";
 import { mockCities } from "@/mocks/cities";
 
@@ -89,27 +88,6 @@ export default async function LandmarkPage({
             </div>
           </div>
         </div>
-
-        {/* Location map */}
-        <section className="mb-12">
-          <h2 className="font-heading text-2xl font-semibold mb-3 inline-flex items-center gap-2">
-            <MapPin className="size-5 text-gold" />
-            Location
-          </h2>
-          <SafarMap
-            center={[landmark.lat, landmark.lng]}
-            zoom={16}
-            height="360px"
-            markers={[
-              {
-                id: landmark.uuid,
-                name: landmark.name,
-                position: [landmark.lat, landmark.lng],
-                description: landmark.shortDescription,
-              },
-            ]}
-          />
-        </section>
 
         {/* Overview placeholder */}
         <article className="prose prose-invert max-w-none">

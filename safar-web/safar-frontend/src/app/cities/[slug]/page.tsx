@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ChevronLeft, MapPin, Headphones, Clock } from "lucide-react";
+import { ChevronLeft, Headphones, Clock, Map as MapIcon } from "lucide-react";
 import { SafarMap, type MapMarker } from "@/components/safar/maps/SafarMap";
 import { mockCities } from "@/mocks/cities";
 import { mockLandmarks } from "@/mocks/landmarks";
@@ -29,11 +29,11 @@ export default async function CityPage({
     <div className="px-5 py-8">
       <div className="container max-w-6xl mx-auto">
         <Link
-          href="/explore"
+          href="/"
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4"
         >
           <ChevronLeft className="size-4" />
-          Back to Explore
+          Back to Home
         </Link>
 
         <div className="mb-6">
@@ -48,36 +48,26 @@ export default async function CityPage({
           </p>
         </div>
 
-        {/* Interactive map */}
+        {/* Interactive map of the city */}
         <section className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-heading text-xl md:text-2xl font-semibold inline-flex items-center gap-2">
+              <MapIcon className="size-5 text-gold" />
+              Map of {city.name}
+            </h2>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {landmarks.length} landmark{landmarks.length === 1 ? "" : "s"}
+            </span>
+          </div>
           <SafarMap
             center={[Number(city.centerLat), Number(city.centerLng)]}
             zoom={Number((city as { defaultZoom?: number }).defaultZoom) || 13}
             height="500px"
             markers={markers}
+            tileStyle="light"
+            showUserLocation
           />
         </section>
-
-        {/* Horizontal landmark buttons (per TZ §8.1) */}
-        {landmarks.length > 0 && (
-          <section className="mb-10">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
-              Quick Jump
-            </p>
-            <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
-              {landmarks.map((lm) => (
-                <Link
-                  key={lm.uuid}
-                  href={`/landmarks/${lm.slug}`}
-                  className="shrink-0 inline-flex items-center gap-2 px-4 h-10 rounded-full ring-1 ring-border bg-card hover:ring-gold/60 hover:bg-card text-sm font-medium transition-all"
-                >
-                  <MapPin className="size-3.5 text-gold" />
-                  {lm.name}
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Landmark list with cards */}
         <section>

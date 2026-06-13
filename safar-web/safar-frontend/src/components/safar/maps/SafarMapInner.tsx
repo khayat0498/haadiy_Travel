@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/providers";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
@@ -28,7 +28,19 @@ type Props = {
   height?: string;
   className?: string;
   tileStyle?: "light" | "dark" | "auto";
+  showUserLocation?: boolean;
 };
+
+// Blue pulsing dot for the user's current location
+const userPin = L.divIcon({
+  className: "safar-user-pin",
+  html: `
+    <span class="safar-user-pulse"></span>
+    <span class="safar-user-dot"></span>
+  `,
+  iconSize: [22, 22],
+  iconAnchor: [11, 11],
+});
 
 // Custom gold pin (matches Safar brand)
 const goldPin = L.divIcon({
@@ -52,6 +64,49 @@ const goldPin = L.divIcon({
   popupAnchor: [0, -40],
 });
 
+// Tracks the user's position in real-time via the Geolocation API.
+// Only mounted inside <MapContainer> so it can access the leaflet map instance.
+function UserLocationLayer({
+  recenterOnFirstFix = false,
+}: {
+  recenterOnFirstFix?: boolean;
+}) {
+  const map = useMap();
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const firstFix = useRef(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("geolocation" in navigator)) return;
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const coords: [number, number] = [
+          pos.coords.latitude,
+          pos.coords.longitude,
+        ];
+        setPosition(coords);
+        if (firstFix.current && recenterOnFirstFix) {
+          map.flyTo(coords, Math.max(map.getZoom(), 14), { duration: 1.2 });
+          firstFix.current = false;
+        }
+      },
+      () => {
+        /* permission denied or unavailable — silently skip */
+      },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 },
+    );
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [map, recenterOnFirstFix]);
+
+  if (!position) return null;
+  return (
+    <Marker position={position} icon={userPin} zIndexOffset={1000}>
+      <Popup maxWidth={180} minWidth={140}>
+        <div className="text-[12px] font-semibold">You are here</div>
+      </Popup>
+    </Marker>
+  );
+}
+
 export function SafarMap({
   center,
   zoom = 13,
@@ -59,6 +114,7 @@ export function SafarMap({
   height = "400px",
   className = "",
   tileStyle = "auto",
+  showUserLocation = false,
 }: Props) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -123,6 +179,7 @@ export function SafarMap({
             </Popup>
           </Marker>
         ))}
+        {showUserLocation && <UserLocationLayer />}
       </MapContainer>
     </div>
   );

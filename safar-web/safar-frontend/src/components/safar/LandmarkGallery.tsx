@@ -9,9 +9,12 @@ type Props = {
   alt: string;
 };
 
+const AUTOPLAY_MS = 4500;
+
 export function LandmarkGallery({ images, alt }: Props) {
   const [index, setIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
+  const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const prev = useCallback(() => {
@@ -21,6 +24,14 @@ export function LandmarkGallery({ images, alt }: Props) {
   const next = useCallback(() => {
     setIndex((i) => (i + 1) % images.length);
   }, [images.length]);
+
+  // Auto-slide: advance every AUTOPLAY_MS while not paused, not fullscreen, and >1 image.
+  // Depending on `index` resets the timer whenever the user manually navigates.
+  useEffect(() => {
+    if (images.length <= 1 || paused || fullscreen) return;
+    const id = window.setInterval(next, AUTOPLAY_MS);
+    return () => window.clearInterval(id);
+  }, [images.length, paused, fullscreen, index, next]);
 
   // Keyboard: arrows + Escape
   useEffect(() => {
@@ -70,8 +81,13 @@ export function LandmarkGallery({ images, alt }: Props) {
         {/* Main image */}
         <div
           className="group relative aspect-[16/9] rounded-2xl overflow-hidden ring-1 ring-border"
-          onTouchStart={handleTouchStart}
+          onTouchStart={(e) => {
+            setPaused(true);
+            handleTouchStart(e);
+          }}
           onTouchEnd={handleTouchEnd}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
           <button
             type="button"
@@ -82,19 +98,24 @@ export function LandmarkGallery({ images, alt }: Props) {
             <span className="sr-only">Open fullscreen</span>
           </button>
 
-          {images.map((img, i) => (
-            <Image
-              key={i}
-              src={img}
-              alt={alt}
-              fill
-              priority={i === 0}
-              sizes="(max-width: 1024px) 100vw, 1024px"
-              className={`object-cover transition-opacity duration-500 ${
-                i === index ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          ))}
+          {/* Sliding strip — all images side-by-side, translated horizontally */}
+          <div
+            className="absolute inset-0 flex transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {images.map((img, i) => (
+              <div key={i} className="relative w-full h-full shrink-0">
+                <Image
+                  src={img}
+                  alt={alt}
+                  fill
+                  priority={i === 0}
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
 
           {/* Expand hint */}
           <span className="pointer-events-none absolute bottom-3 right-3 z-20 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-[11px] font-medium text-white ring-1 ring-white/15 opacity-90">
